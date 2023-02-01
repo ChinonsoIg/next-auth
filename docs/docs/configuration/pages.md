@@ -95,10 +95,20 @@ export default function SignIn({ providers }) {
 }
 
 export async function getServerSideProps(context) {
-  const providers = await getProviders()
+  const { req } = context;
+  const session = await getSession({ req });
+  const providers = await getProviders(context);
+
+  // If sign in is successful, redirect user to home page
+  if (session) {
+    return {
+      redirect: { destination: "/" },
+    };
+  }
+
   return {
     props: { providers },
-  }
+  };
 }
 ```
 
